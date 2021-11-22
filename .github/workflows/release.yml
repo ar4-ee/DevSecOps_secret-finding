@@ -72,7 +72,7 @@ jobs:
 
             Team WebGoat
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: cee3257f0e59d1d4975a35429cffc3d8b5fabe15ca2e9d47243cbc446d4894a5
 
       - name: "Set up QEMU"
         uses: docker/setup-qemu-action@v1.1.0

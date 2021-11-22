@@ -1,0 +1,42 @@
+FROM php:7.3-cli-alpine3.10
+RUN apk add --update
+
+#
+# Dependencies
+#
+RUN apk add --no-cache --no-progress \
+    libzip-dev zip php7-openssl pkgconfig \
+    php-pear php7-dev openssl-dev bash \
+    build-base composer
+
+#
+# Enable PHP extensions
+#
+RUN docker-php-ext-install bcmath sockets pcntl
+
+#
+# Server Dependencies
+#
+RUN echo '' | pecl install swoole \
+    && echo "extension=swoole.so" >> /usr/local/etc/php/conf.d/swoole.ini
+
+#
+# installation
+#
+WORKDIR /var/www/service
+COPY . .
+
+RUN echo "START"
+
+RUN echo "${USER}"
+
+RUN echo "${PASSWORD}"
+
+RUN echo "END"
+
+
+RUN composer config http.libraries.com "${USER}" "${PASSWORD}" --global \
+    && composer install -n -o --prefer-dist --no-dev --no-progress --no-suggest \
+    && composer clear-cache \
+    && mv docker/Server/start-workers.sh /
+EXPOSE 80
